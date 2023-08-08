@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "632335899087",
+    "project_id": "nmims-leave-portal",
+    "storage_bucket": "nmims-leave-portal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632335899087:android:26f9c2d7d18ccbba181aba",
+        "android_client_info": {
+          "package_name": "com.example.nmims_leave_portal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "632335899087-leprk3ahq3om6t3ui9grbrles4ncqtu3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDb2nu4F8KTz4RaDyLi09MLXuCwKLPWcCE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "632335899087-leprk3ahq3om6t3ui9grbrles4ncqtu3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
