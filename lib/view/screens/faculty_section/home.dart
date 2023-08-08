@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nmims_leave_portal/theme/color_constants.dart';
-import 'package:nmims_leave_portal/view/screens/student_section/apply_leave.dart';
-import 'package:nmims_leave_portal/view/screens/student_section/leave_history.dart';
-import 'package:nmims_leave_portal/view/screens/student_section/leave_status.dart';
+import 'package:nmims_leave_portal/view/screens/faculty_section/pending_leaves.dart';
 
-Widget studentHome(context, currentStudent) {
+Widget facultyHome(context, currentFaculty) {
   return Column(
     children: [
       GestureDetector(
@@ -13,8 +11,9 @@ Widget studentHome(context, currentStudent) {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  ApplyLeaveScreen(currentStudent: currentStudent),
+              builder: (context) => PendingLeavesPage(
+                currentFaculty: currentFaculty,
+              ),
             ),
           );
         },
@@ -34,7 +33,7 @@ Widget studentHome(context, currentStudent) {
           ),
           child: Center(
             child: Text(
-              'APPLY FOR LEAVE',
+              'PENDING LEAVES',
               style: GoogleFonts.inter(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
@@ -45,16 +44,7 @@ Widget studentHome(context, currentStudent) {
         ),
       ),
       GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => LeaveStatusScreen(
-                currentStudent: currentStudent,
-              ),
-            ),
-          );
-        },
+        onTap: () {},
         child: Container(
           height: 70,
           margin: const EdgeInsets.only(
@@ -71,7 +61,7 @@ Widget studentHome(context, currentStudent) {
           ),
           child: Center(
             child: Text(
-              'LEAVE STATUS',
+              'REJECTED LEAVES',
               style: GoogleFonts.inter(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
@@ -82,16 +72,7 @@ Widget studentHome(context, currentStudent) {
         ),
       ),
       GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => LeaveHistoryScreen(
-                currentStudent: currentStudent,
-              ),
-            ),
-          );
-        },
+        onTap: () {},
         child: Container(
           height: 70,
           margin: const EdgeInsets.only(
@@ -108,7 +89,7 @@ Widget studentHome(context, currentStudent) {
           ),
           child: Center(
             child: Text(
-              'LEAVE HISTORY',
+              'APPROVED LEAVES',
               style: GoogleFonts.inter(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,

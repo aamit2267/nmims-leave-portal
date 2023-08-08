@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:nmims_leave_portal/store/app_store.dart';
 import 'package:nmims_leave_portal/theme/color_constants.dart';
+import 'package:nmims_leave_portal/view/screens/faculty_section/home.dart';
 import 'package:nmims_leave_portal/view/screens/home_screen/widgets/end_drawer.dart';
 import 'package:nmims_leave_portal/view/screens/student_section/home.dart';
 import 'package:nmims_leave_portal/view/widgets/app_bar.dart';

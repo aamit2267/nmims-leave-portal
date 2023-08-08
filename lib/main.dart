@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
       title: 'NMIMS LEAVE PORTAL',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
         useMaterial3: true,
       ),
       home: StreamBuilder<User?>(

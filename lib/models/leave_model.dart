@@ -20,6 +20,7 @@ class LeaveModel {
   String? leaveType;
   String? status;
   String? createdAt;
+  String? id;
 
   LeaveModel({
     this.studentName,
@@ -43,5 +44,6 @@ class LeaveModel {
     this.leaveType,
     this.status,
     this.createdAt,
+    this.id,
   });
 }

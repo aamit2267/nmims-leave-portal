@@ -320,7 +320,7 @@ Widget form(controllers, context, setState) {
                     _controllers['total_academic_days']!.text;
                 leave.reason = _controllers['reason']!.text;
                 leave.leaveType = leaveType == 0 ? 'authorized' : 'special';
-                leave.status = 'pending';
+                leave.status = 'PENDING';
                 leave.createdAt = DateTime.now().toString();
                 AppStore().applyLeave(leave);
 
