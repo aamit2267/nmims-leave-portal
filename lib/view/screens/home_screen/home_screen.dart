@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
+        endDrawerEnableOpenDragGesture: false,
         key: scaffoldKey,
         backgroundColor: ColorConstants.white,
         endDrawer: FutureBuilder(
@@ -52,12 +53,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   scaffoldKey,
                   appStore.role,
                   appStore.currentStudent,
+                  context,
                 );
               } else {
                 return endDrawerFaculty(
                   scaffoldKey,
                   appStore.role,
                   appStore.currentFaculty,
+                  context,
                 );
               }
             } else {

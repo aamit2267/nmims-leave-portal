@@ -12,9 +12,12 @@ Widget studentHome(context, currentStudent) {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  ApplyLeaveScreen(currentStudent: currentStudent),
+            PageRouteBuilder(
+              pageBuilder: (context, animation1, animation2) =>
+                  ApplyLeaveScreen(
+                currentStudent: currentStudent,
+              ),
+              transitionDuration: const Duration(seconds: 0),
             ),
           );
         },
@@ -48,10 +51,12 @@ Widget studentHome(context, currentStudent) {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => LeaveStatusScreen(
+            PageRouteBuilder(
+              pageBuilder: (context, animation1, animation2) =>
+                  LeaveStatusScreen(
                 currentStudent: currentStudent,
               ),
+              transitionDuration: const Duration(seconds: 0),
             ),
           );
         },
@@ -85,10 +90,12 @@ Widget studentHome(context, currentStudent) {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => LeaveHistoryScreen(
+            PageRouteBuilder(
+              pageBuilder: (context, animation1, animation2) =>
+                  LeaveHistoryScreen(
                 currentStudent: currentStudent,
               ),
+              transitionDuration: const Duration(seconds: 0),
             ),
           );
         },

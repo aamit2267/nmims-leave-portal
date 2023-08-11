@@ -10,10 +10,12 @@ Widget facultyHome(context, currentFaculty) {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => PendingLeavesPage(
+            PageRouteBuilder(
+              pageBuilder: (context, animation1, animation2) =>
+                  PendingLeavesPage(
                 currentFaculty: currentFaculty,
               ),
+              transitionDuration: const Duration(seconds: 0),
             ),
           );
         },

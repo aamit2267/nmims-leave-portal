@@ -10,23 +10,131 @@ import 'package:nmims_leave_portal/theme/color_constants.dart';
 import 'package:nmims_leave_portal/view/screens/faculty_section/pending_leaves.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class leaveCard extends StatefulWidget {
+class leaveCardHOD extends StatefulWidget {
   final LeaveModel leave;
   final AppStore appStore;
   final FacultyModel currentFaculty;
-  const leaveCard(
+  const leaveCardHOD(
       {super.key,
       required this.leave,
       required this.appStore,
       required this.currentFaculty});
 
   @override
-  State<leaveCard> createState() => _leaveCardState();
+  State<leaveCardHOD> createState() => _leaveCardHODState();
 }
 
-class _leaveCardState extends State<leaveCard> {
+class _leaveCardHODState extends State<leaveCardHOD> {
   bool phone = false;
   bool mail = false;
+
+  Widget forwardButton() {
+    return GestureDetector(
+      onTap: () {
+        widget.appStore
+            .updateLeaveStatus(widget.leave, "FORWARDED TO ASSOCIATE DEAN");
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) =>
+                PendingLeavesPage(currentFaculty: widget.currentFaculty),
+            transitionDuration: const Duration(seconds: 0),
+          ),
+        );
+        Fluttertoast.showToast(
+          msg: 'FORWARDED TO ASSOCIATE DEAN',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: ColorConstants.golden,
+          textColor: ColorConstants.white,
+          fontSize: 16.0,
+        );
+      },
+      child: Container(
+        height: 60,
+        width: 130,
+        margin: const EdgeInsets.only(
+          top: 20,
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 5,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: ColorConstants.golden,
+          border: Border.all(
+            color: ColorConstants.black,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            'FORWARD',
+            style: GoogleFonts.inter(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: ColorConstants.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget approveButton() {
+    return GestureDetector(
+      onTap: () {
+        widget.appStore.updateLeaveStatus(widget.leave, "APPROVED");
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) =>
+                PendingLeavesPage(currentFaculty: widget.currentFaculty),
+            transitionDuration: const Duration(seconds: 0),
+          ),
+        );
+        Fluttertoast.showToast(
+          msg: 'APPROVED LEAVE',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: ColorConstants.golden,
+          textColor: ColorConstants.white,
+          fontSize: 16.0,
+        );
+      },
+      child: Container(
+        height: 60,
+        width: 130,
+        margin: const EdgeInsets.only(
+          top: 20,
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 5,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: ColorConstants.green,
+          border: Border.all(
+            color: ColorConstants.black,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            'APPROVED',
+            style: GoogleFonts.inter(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: ColorConstants.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -260,82 +368,7 @@ class _leaveCardState extends State<leaveCard> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  onTap: () {
-                    // show pop up to confirm
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text(
-                            'Confirm',
-                            style: GoogleFonts.inter(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              color: ColorConstants.black,
-                            ),
-                          ),
-                          content: Text(
-                            'Are you sure you want to reject this leave?',
-                            style: GoogleFonts.inter(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: ColorConstants.black,
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                'No',
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: ColorConstants.black,
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                widget.appStore.updateLeaveStatus(
-                                    widget.leave, "REJECTED");
-                                Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    pageBuilder:
-                                        (context, animation1, animation2) =>
-                                            PendingLeavesPage(
-                                                currentFaculty:
-                                                    widget.currentFaculty),
-                                    transitionDuration:
-                                        const Duration(seconds: 0),
-                                  ),
-                                );
-                                Fluttertoast.showToast(
-                                  msg: 'REJECTED THE LEAVE',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: ColorConstants.red,
-                                  textColor: ColorConstants.white,
-                                  fontSize: 16.0,
-                                );
-                              },
-                              child: Text(
-                                'Yes',
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: ColorConstants.black,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
+                  onTap: () {},
                   child: Container(
                     height: 60,
                     width: 130,
@@ -365,58 +398,7 @@ class _leaveCardState extends State<leaveCard> {
                     ),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    widget.appStore.updateLeaveStatus(
-                        widget.leave, "FORWARDED TO PROGRAM CHAIR");
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation1, animation2) =>
-                            PendingLeavesPage(
-                                currentFaculty: widget.currentFaculty),
-                        transitionDuration: const Duration(seconds: 0),
-                      ),
-                    );
-                    Fluttertoast.showToast(
-                      msg: 'FORWARDED TO PROGRAM CHAIR',
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: ColorConstants.golden,
-                      textColor: ColorConstants.white,
-                      fontSize: 16.0,
-                    );
-                  },
-                  child: Container(
-                    height: 60,
-                    width: 130,
-                    margin: const EdgeInsets.only(
-                      top: 20,
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: ColorConstants.golden,
-                      border: Border.all(
-                        color: ColorConstants.black,
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'FORWARD',
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: ColorConstants.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                approveButton(),
               ],
             )
           ],

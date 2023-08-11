@@ -4,7 +4,6 @@ class StudentModel {
   String? rollNo;
   String? program;
   String? branch;
-  String? mentorId;
 
   StudentModel({
     this.name,

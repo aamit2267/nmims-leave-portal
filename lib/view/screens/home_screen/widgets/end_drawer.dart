@@ -3,8 +3,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nmims_leave_portal/store/app_store.dart';
 import 'package:nmims_leave_portal/theme/color_constants.dart';
+import 'package:nmims_leave_portal/view/screens/auth_screen/auth_screen.dart';
+import 'package:nmims_leave_portal/view/screens/faculty_section/pending_leaves.dart';
+import 'package:nmims_leave_portal/view/screens/home_screen/home_screen.dart';
+import 'package:nmims_leave_portal/view/screens/student_section/apply_leave.dart';
+import 'package:nmims_leave_portal/view/screens/student_section/leave_history.dart';
+import 'package:nmims_leave_portal/view/screens/student_section/leave_status.dart';
 
-Widget endDrawerStudent(scaffoldKey, role, currentStudent) {
+Widget endDrawerStudent(scaffoldKey, role, currentStudent, context) {
   final AppStore appStore = AppStore();
   return Drawer(
     backgroundColor: ColorConstants.white,
@@ -78,6 +84,180 @@ Widget endDrawerStudent(scaffoldKey, role, currentStudent) {
             color: ColorConstants.disabledText,
             thickness: 1,
           ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const HomeScreen(),
+                  transitionDuration: const Duration(seconds: 0),
+                ),
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.only(
+                left: 35,
+                top: 20,
+                bottom: 20,
+              ),
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/home.svg',
+                    width: 30,
+                  ),
+                  const SizedBox(
+                    width: 26,
+                  ),
+                  Text(
+                    'HOME',
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: ColorConstants.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const Divider(
+            color: ColorConstants.disabledText,
+            thickness: 1,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      ApplyLeaveScreen(
+                    currentStudent: currentStudent,
+                  ),
+                  transitionDuration: const Duration(seconds: 0),
+                ),
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.only(
+                left: 35,
+                top: 20,
+                bottom: 20,
+              ),
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/timer.svg',
+                    width: 30,
+                  ),
+                  const SizedBox(
+                    width: 26,
+                  ),
+                  Text(
+                    'APPLY LEAVE',
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: ColorConstants.golden,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const Divider(
+            color: ColorConstants.disabledText,
+            thickness: 1,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      LeaveStatusScreen(
+                    currentStudent: currentStudent,
+                  ),
+                  transitionDuration: const Duration(seconds: 0),
+                ),
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.only(
+                left: 35,
+                top: 20,
+                bottom: 20,
+              ),
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/rejected.svg',
+                    width: 30,
+                  ),
+                  const SizedBox(
+                    width: 26,
+                  ),
+                  Text(
+                    'LEAVE STATUS',
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: ColorConstants.red,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const Divider(
+            color: ColorConstants.disabledText,
+            thickness: 1,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      LeaveHistoryScreen(
+                    currentStudent: currentStudent,
+                  ),
+                  transitionDuration: const Duration(seconds: 0),
+                ),
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.only(
+                left: 35,
+                top: 20,
+                bottom: 20,
+              ),
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/approved.svg',
+                    width: 30,
+                  ),
+                  const SizedBox(
+                    width: 26,
+                  ),
+                  Text(
+                    'LEAVE HISTORY',
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: ColorConstants.green,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const Divider(
+            color: ColorConstants.disabledText,
+            thickness: 1,
+          ),
           Container(
             margin: const EdgeInsets.only(
               left: 35,
@@ -96,7 +276,7 @@ Widget endDrawerStudent(scaffoldKey, role, currentStudent) {
                 Text(
                   'Support',
                   style: GoogleFonts.inter(
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: FontWeight.w500,
                     color: ColorConstants.black,
                   ),
@@ -111,6 +291,14 @@ Widget endDrawerStudent(scaffoldKey, role, currentStudent) {
           GestureDetector(
             onTap: () {
               appStore.signOut();
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const AuthScreen(),
+                  transitionDuration: const Duration(seconds: 0),
+                ),
+              );
             },
             child: Container(
               margin: const EdgeInsets.only(
@@ -130,7 +318,7 @@ Widget endDrawerStudent(scaffoldKey, role, currentStudent) {
                   Text(
                     'Log Out',
                     style: GoogleFonts.inter(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: ColorConstants.red,
                     ),
@@ -149,7 +337,7 @@ Widget endDrawerStudent(scaffoldKey, role, currentStudent) {
   );
 }
 
-Widget endDrawerFaculty(scaffoldKey, role, currentFaculty) {
+Widget endDrawerFaculty(scaffoldKey, role, currentFaculty, context) {
   final AppStore appStore = AppStore();
   return Drawer(
     backgroundColor: ColorConstants.white,
@@ -207,6 +395,152 @@ Widget endDrawerFaculty(scaffoldKey, role, currentFaculty) {
             color: ColorConstants.disabledText,
             thickness: 1,
           ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const HomeScreen(),
+                  transitionDuration: const Duration(seconds: 0),
+                ),
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.only(
+                left: 35,
+                top: 20,
+                bottom: 20,
+              ),
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/home.svg',
+                    width: 30,
+                  ),
+                  const SizedBox(
+                    width: 26,
+                  ),
+                  Text(
+                    'HOME',
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: ColorConstants.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const Divider(
+            color: ColorConstants.disabledText,
+            thickness: 1,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      PendingLeavesPage(
+                    currentFaculty: currentFaculty,
+                  ),
+                  transitionDuration: const Duration(seconds: 0),
+                ),
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.only(
+                left: 35,
+                top: 20,
+                bottom: 20,
+              ),
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/timer.svg',
+                    width: 30,
+                  ),
+                  const SizedBox(
+                    width: 26,
+                  ),
+                  Text(
+                    'PENDING LEAVES',
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: ColorConstants.golden,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const Divider(
+            color: ColorConstants.disabledText,
+            thickness: 1,
+          ),
+          Container(
+            margin: const EdgeInsets.only(
+              left: 35,
+              top: 20,
+              bottom: 20,
+            ),
+            child: Row(
+              children: [
+                SvgPicture.asset(
+                  'assets/icons/rejected.svg',
+                  width: 30,
+                ),
+                const SizedBox(
+                  width: 26,
+                ),
+                Text(
+                  'REJECTED LEAVES',
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: ColorConstants.red,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Divider(
+            color: ColorConstants.disabledText,
+            thickness: 1,
+          ),
+          Container(
+            margin: const EdgeInsets.only(
+              left: 35,
+              top: 20,
+              bottom: 20,
+            ),
+            child: Row(
+              children: [
+                SvgPicture.asset(
+                  'assets/icons/approved.svg',
+                  width: 30,
+                ),
+                const SizedBox(
+                  width: 26,
+                ),
+                Text(
+                  'APPROVED LEAVES',
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: ColorConstants.green,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Divider(
+            color: ColorConstants.disabledText,
+            thickness: 1,
+          ),
           Container(
             margin: const EdgeInsets.only(
               left: 35,
@@ -225,7 +559,7 @@ Widget endDrawerFaculty(scaffoldKey, role, currentFaculty) {
                 Text(
                   'Support',
                   style: GoogleFonts.inter(
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: FontWeight.w500,
                     color: ColorConstants.black,
                   ),
@@ -259,7 +593,7 @@ Widget endDrawerFaculty(scaffoldKey, role, currentFaculty) {
                   Text(
                     'Log Out',
                     style: GoogleFonts.inter(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: ColorConstants.red,
                     ),

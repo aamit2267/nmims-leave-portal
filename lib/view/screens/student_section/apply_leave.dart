@@ -4,6 +4,7 @@ import 'package:nmims_leave_portal/models/leave_model.dart';
 import 'package:nmims_leave_portal/models/student_model.dart';
 import 'package:nmims_leave_portal/store/app_store.dart';
 import 'package:nmims_leave_portal/theme/color_constants.dart';
+import 'package:nmims_leave_portal/view/screens/home_screen/home_screen.dart';
 import 'package:nmims_leave_portal/view/screens/home_screen/widgets/end_drawer.dart';
 import 'package:nmims_leave_portal/view/widgets/app_bar.dart';
 import 'package:intl/intl.dart';
@@ -41,9 +42,11 @@ class ApplyLeaveScreen extends StatefulWidget {
 
 class _ApplyLeaveScreenState extends State<ApplyLeaveScreen> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
+  final AppStore appStore = AppStore();
 
   @override
   void initState() {
+    appStore.getUserData();
     _controllers['name']!.text = widget.currentStudent.name!;
     _controllers['sap_id']!.text = widget.currentStudent.sapId!;
     _controllers['roll_no']!.text = widget.currentStudent.rollNo!;
@@ -59,15 +62,25 @@ class _ApplyLeaveScreenState extends State<ApplyLeaveScreen> {
         for (var i = 0; i < _controllers.length; i++) {
           _controllers.values.elementAt(i).text = '';
         }
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) =>
+                const HomeScreen(),
+            transitionDuration: const Duration(seconds: 0),
+          ),
+        );
         return true;
       },
       child: Scaffold(
         key: scaffoldKey,
+        endDrawerEnableOpenDragGesture: false,
         backgroundColor: ColorConstants.white,
         endDrawer: endDrawerStudent(
           scaffoldKey,
           'student',
           widget.currentStudent,
+          context,
         ),
         body: SafeArea(
           child: Column(
@@ -616,10 +629,9 @@ Widget customDatePicker(
                 if (picked != null) {
                   controller.text = formatter.format(picked);
                   _controllers['total_days']!.text = (picked
-                              .difference(
-                                  formatter.parse(_controllers['from']!.text))
-                              .inDays +
-                          1)
+                          .difference(
+                              formatter.parse(_controllers['from']!.text))
+                          .inDays)
                       .toString();
                 }
               } catch (e) {

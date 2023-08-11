@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, empty_catches
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -94,7 +94,6 @@ abstract class _AppStore with Store {
       'leave_type': leave.leaveType,
       'status': leave.status,
       'created_at': leave.createdAt,
-      'mentorId': currentStudent.mentorId,
     }).then((value) async {
       await FirebaseFirestore.instance
           .collection('students')
@@ -108,55 +107,234 @@ abstract class _AppStore with Store {
   @action
   Future<void> getPendingLeaves() async {
     leaves.clear();
-
     List<String> mentees = [];
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('faculties')
-        .where('mentor_id', isEqualTo: currentUser.id)
+    DocumentSnapshot user = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(auth.currentUser!.uid)
         .get();
-    for (var element in querySnapshot.docs) {
-      mentees = List.from(element.get('mentees'));
-    }
+    try {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('faculties')
+          .doc(user.get('id'))
+          .get();
+      mentees = List.from(documentSnapshot.get('mentees'));
 
-    QuerySnapshot querySnapshot2 = await FirebaseFirestore.instance
-        .collection('leaves')
-        .where('student_sap_id', whereIn: mentees)
-        .where('status', isEqualTo: 'PENDING')
-        .get();
-    for (var element in querySnapshot2.docs) {
-      leaves.add(LeaveModel(
-        studentName: element.get('student_name'),
-        studentSapId: element.get('student_sap_id'),
-        studentRollNo: element.get('student_roll_no'),
-        studentProgram: element.get('student_program'),
-        studentBranch: element.get('student_branch'),
-        studentSemester: element.get('student_semester'),
-        studentEmail: element.get('student_email'),
-        parentEmail: element.get('parent_email'),
-        studentMobile: element.get('student_mobile'),
-        parentMobile: element.get('parent_mobile'),
-        homeAddress: element.get('home_address'),
-        hostelRoomNo: element.get('hostel_room_no'),
-        averageAttendance: element.get('average_attendance'),
-        dateFrom: element.get('date_from'),
-        dateTo: element.get('date_to'),
-        totalDays: element.get('total_days'),
-        totalAcademicDays: element.get('total_academic_days'),
-        reason: element.get('reason'),
-        leaveType: element.get('leave_type'),
-        status: element.get('status'),
-        createdAt: element.get('created_at'),
-        id: element.id,
-      ));
-    }
+      QuerySnapshot querySnapshot2 = await FirebaseFirestore.instance
+          .collection('leaves')
+          .where('student_sap_id', whereIn: mentees)
+          .where('status', isEqualTo: 'PENDING')
+          .get();
+      for (var element in querySnapshot2.docs) {
+        leaves.add(LeaveModel(
+          studentName: element.get('student_name'),
+          studentSapId: element.get('student_sap_id'),
+          studentRollNo: element.get('student_roll_no'),
+          studentProgram: element.get('student_program'),
+          studentBranch: element.get('student_branch'),
+          studentSemester: element.get('student_semester'),
+          studentEmail: element.get('student_email'),
+          parentEmail: element.get('parent_email'),
+          studentMobile: element.get('student_mobile'),
+          parentMobile: element.get('parent_mobile'),
+          homeAddress: element.get('home_address'),
+          hostelRoomNo: element.get('hostel_room_no'),
+          averageAttendance: element.get('average_attendance'),
+          dateFrom: element.get('date_from'),
+          dateTo: element.get('date_to'),
+          totalDays: element.get('total_days'),
+          totalAcademicDays: element.get('total_academic_days'),
+          reason: element.get('reason'),
+          leaveType: element.get('leave_type'),
+          status: element.get('status'),
+          createdAt: element.get('created_at'),
+          id: element.id,
+        ));
+      }
+    } catch (e) {}
+    try {
+      DocumentSnapshot documentSnapshot2 = await FirebaseFirestore.instance
+          .collection('programchair')
+          .doc(user.get('id'))
+          .get();
+      String branch = documentSnapshot2.get('branch');
+      QuerySnapshot querySnapshot3 = await FirebaseFirestore.instance
+          .collection('leaves')
+          .where('student_branch', isEqualTo: branch)
+          .where('status', isEqualTo: 'FORWARDED TO PROGRAM CHAIR')
+          .get();
+      for (var element in querySnapshot3.docs) {
+        leaves.add(LeaveModel(
+          studentName: element.get('student_name'),
+          studentSapId: element.get('student_sap_id'),
+          studentRollNo: element.get('student_roll_no'),
+          studentProgram: element.get('student_program'),
+          studentBranch: element.get('student_branch'),
+          studentSemester: element.get('student_semester'),
+          studentEmail: element.get('student_email'),
+          parentEmail: element.get('parent_email'),
+          studentMobile: element.get('student_mobile'),
+          parentMobile: element.get('parent_mobile'),
+          homeAddress: element.get('home_address'),
+          hostelRoomNo: element.get('hostel_room_no'),
+          averageAttendance: element.get('average_attendance'),
+          dateFrom: element.get('date_from'),
+          dateTo: element.get('date_to'),
+          totalDays: element.get('total_days'),
+          totalAcademicDays: element.get('total_academic_days'),
+          reason: element.get('reason'),
+          leaveType: element.get('leave_type'),
+          status: element.get('status'),
+          createdAt: element.get('created_at'),
+          id: element.id,
+        ));
+      }
+    } catch (e) {}
+    try {
+      DocumentSnapshot documentSnapshot3 = await FirebaseFirestore.instance
+          .collection('HOD')
+          .doc(user.get('id'))
+          .get();
+      String program = documentSnapshot3.get('program');
+      QuerySnapshot querySnapshot4 = await FirebaseFirestore.instance
+          .collection('leaves')
+          .where('student_program', isEqualTo: program)
+          .where('status', isEqualTo: 'FORWARDED TO HOD')
+          .get();
+      for (var element in querySnapshot4.docs) {
+        leaves.add(LeaveModel(
+          studentName: element.get('student_name'),
+          studentSapId: element.get('student_sap_id'),
+          studentRollNo: element.get('student_roll_no'),
+          studentProgram: element.get('student_program'),
+          studentBranch: element.get('student_branch'),
+          studentSemester: element.get('student_semester'),
+          studentEmail: element.get('student_email'),
+          parentEmail: element.get('parent_email'),
+          studentMobile: element.get('student_mobile'),
+          parentMobile: element.get('parent_mobile'),
+          homeAddress: element.get('home_address'),
+          hostelRoomNo: element.get('hostel_room_no'),
+          averageAttendance: element.get('average_attendance'),
+          dateFrom: element.get('date_from'),
+          dateTo: element.get('date_to'),
+          totalDays: element.get('total_days'),
+          totalAcademicDays: element.get('total_academic_days'),
+          reason: element.get('reason'),
+          leaveType: element.get('leave_type'),
+          status: element.get('status'),
+          createdAt: element.get('created_at'),
+          id: element.id,
+        ));
+      }
+    } catch (e) {}
   }
 
   @action
   Future<void> updateLeaveStatus(LeaveModel leave, String status) async {
-    await FirebaseFirestore.instance
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
         .collection('leaves')
         .doc(leave.id)
-        .update({'status': status});
+        .get();
+    if (documentSnapshot.exists) {
+      await FirebaseFirestore.instance
+          .collection('leaves')
+          .doc(leave.id)
+          .update({'status': status});
+    }
+  }
+
+  @action
+  Future<void> getLeaveHistory() async {
+    leaves.clear();
+    DocumentSnapshot user = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .get();
+    try {
+      DocumentSnapshot student = await FirebaseFirestore.instance
+          .collection('students')
+          .doc(user.get('id'))
+          .get();
+      List<String> leavesId = [];
+      for (var element in student.get('leaves')) {
+        leavesId.add(element);
+      }
+      for (var element in leavesId) {
+        DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+            .collection('leaves')
+            .doc(element)
+            .get();
+        leaves.add(LeaveModel(
+          studentName: documentSnapshot.get('student_name'),
+          studentSapId: documentSnapshot.get('student_sap_id'),
+          studentRollNo: documentSnapshot.get('student_roll_no'),
+          studentProgram: documentSnapshot.get('student_program'),
+          studentBranch: documentSnapshot.get('student_branch'),
+          studentSemester: documentSnapshot.get('student_semester'),
+          studentEmail: documentSnapshot.get('student_email'),
+          parentEmail: documentSnapshot.get('parent_email'),
+          studentMobile: documentSnapshot.get('student_mobile'),
+          parentMobile: documentSnapshot.get('parent_mobile'),
+          homeAddress: documentSnapshot.get('home_address'),
+          hostelRoomNo: documentSnapshot.get('hostel_room_no'),
+          averageAttendance: documentSnapshot.get('average_attendance'),
+          dateFrom: documentSnapshot.get('date_from'),
+          dateTo: documentSnapshot.get('date_to'),
+          totalDays: documentSnapshot.get('total_days'),
+          totalAcademicDays: documentSnapshot.get('total_academic_days'),
+          reason: documentSnapshot.get('reason'),
+          leaveType: documentSnapshot.get('leave_type'),
+          status: documentSnapshot.get('status'),
+          createdAt: documentSnapshot.get('created_at'),
+          id: documentSnapshot.id,
+        ));
+      }
+      leaves = leaves.reversed.toList();
+    } catch (e) {}
+  }
+
+  @action
+  Future<void> getLastLeaveStatus() async {
+    leaves.clear();
+    DocumentSnapshot user = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .get();
+    try {
+      DocumentSnapshot student = await FirebaseFirestore.instance
+          .collection('students')
+          .doc(user.get('id'))
+          .get();
+      String leavesId = student.get('leaves').last;
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('leaves')
+          .doc(leavesId)
+          .get();
+      leaves.add(LeaveModel(
+        studentName: documentSnapshot.get('student_name'),
+        studentSapId: documentSnapshot.get('student_sap_id'),
+        studentRollNo: documentSnapshot.get('student_roll_no'),
+        studentProgram: documentSnapshot.get('student_program'),
+        studentBranch: documentSnapshot.get('student_branch'),
+        studentSemester: documentSnapshot.get('student_semester'),
+        studentEmail: documentSnapshot.get('student_email'),
+        parentEmail: documentSnapshot.get('parent_email'),
+        studentMobile: documentSnapshot.get('student_mobile'),
+        parentMobile: documentSnapshot.get('parent_mobile'),
+        homeAddress: documentSnapshot.get('home_address'),
+        hostelRoomNo: documentSnapshot.get('hostel_room_no'),
+        averageAttendance: documentSnapshot.get('average_attendance'),
+        dateFrom: documentSnapshot.get('date_from'),
+        dateTo: documentSnapshot.get('date_to'),
+        totalDays: documentSnapshot.get('total_days'),
+        totalAcademicDays: documentSnapshot.get('total_academic_days'),
+        reason: documentSnapshot.get('reason'),
+        leaveType: documentSnapshot.get('leave_type'),
+        status: documentSnapshot.get('status'),
+        createdAt: documentSnapshot.get('created_at'),
+        id: documentSnapshot.id,
+      ));
+    } catch (e) {}
   }
 
   @action
