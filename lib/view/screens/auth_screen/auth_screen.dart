@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -143,7 +145,24 @@ class _AuthScreenState extends State<AuthScreen> {
                           top: 30,
                         ),
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            try {
+                              final result =
+                                  await InternetAddress.lookup('google.com');
+                              if (result.isNotEmpty &&
+                                  result[0].rawAddress.isNotEmpty) {}
+                            } on SocketException catch (_) {
+                              Fluttertoast.showToast(
+                                msg: 'Please check your internet connection',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: ColorConstants.mehroon,
+                                textColor: ColorConstants.white,
+                                fontSize: 16.0,
+                              );
+                              return;
+                            }
                             if (_usernameController.text.isEmpty ||
                                 _passwordController.text.isEmpty) {
                               Fluttertoast.showToast(
@@ -156,10 +175,22 @@ class _AuthScreenState extends State<AuthScreen> {
                                 fontSize: 16.0,
                               );
                             } else {
-                              appStore.signIn(
-                                '${_usernameController.text}@nmims.com',
-                                _passwordController.text,
-                              );
+                              try {
+                                appStore.signIn(
+                                  '${_usernameController.text}@nmims.com',
+                                  _passwordController.text,
+                                );
+                              } catch (e) {
+                                Fluttertoast.showToast(
+                                  msg: 'Invalid Credentials',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: ColorConstants.mehroon,
+                                  textColor: ColorConstants.white,
+                                  fontSize: 16.0,
+                                );
+                              }
                             }
                           },
                           style: ElevatedButton.styleFrom(

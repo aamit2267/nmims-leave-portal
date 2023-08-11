@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nmims_leave_portal/store/app_store.dart';
 import 'package:nmims_leave_portal/theme/color_constants.dart';
-import 'package:nmims_leave_portal/view/screens/auth_screen/auth_screen.dart';
 import 'package:nmims_leave_portal/view/screens/faculty_section/pending_leaves.dart';
 import 'package:nmims_leave_portal/view/screens/home_screen/home_screen.dart';
 import 'package:nmims_leave_portal/view/screens/student_section/apply_leave.dart';
@@ -291,14 +290,6 @@ Widget endDrawerStudent(scaffoldKey, role, currentStudent, context) {
           GestureDetector(
             onTap: () {
               appStore.signOut();
-              Navigator.pushReplacement(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) =>
-                      const AuthScreen(),
-                  transitionDuration: const Duration(seconds: 0),
-                ),
-              );
             },
             child: Container(
               margin: const EdgeInsets.only(

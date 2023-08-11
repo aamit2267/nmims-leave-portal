@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       home: StreamBuilder<User?>(
-        stream: auth.userChanges(),
+        stream: auth.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Scaffold(

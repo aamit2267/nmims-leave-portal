@@ -23,11 +23,6 @@ class _PendingLeavesPageState extends State<PendingLeavesPage> {
   final appStore = AppStore();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {

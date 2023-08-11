@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nmims_leave_portal/models/faculty_model.dart';
 import 'package:nmims_leave_portal/models/leave_model.dart';
@@ -150,7 +151,9 @@ abstract class _AppStore with Store {
           id: element.id,
         ));
       }
-    } catch (e) {}
+    } catch (e) {
+      return;
+    }
     try {
       DocumentSnapshot documentSnapshot2 = await FirebaseFirestore.instance
           .collection('programchair')
@@ -188,7 +191,9 @@ abstract class _AppStore with Store {
           id: element.id,
         ));
       }
-    } catch (e) {}
+    } catch (e) {
+      return;
+    }
     try {
       DocumentSnapshot documentSnapshot3 = await FirebaseFirestore.instance
           .collection('HOD')
@@ -226,7 +231,9 @@ abstract class _AppStore with Store {
           id: element.id,
         ));
       }
-    } catch (e) {}
+    } catch (e) {
+      return;
+    }
   }
 
   @action
@@ -339,11 +346,27 @@ abstract class _AppStore with Store {
 
   @action
   Future<void> signOut() async {
-    await auth.signOut();
+    try {
+      await auth.signOut();
+    } on Exception catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
   }
 
   @action
   Future<void> signIn(email, password) async {
-    await auth.signInWithEmailAndPassword(email: email, password: password);
+    try {
+      await auth.signInWithEmailAndPassword(email: email, password: password);
+    } on Exception catch (e) {
+      if (e.toString() ==
+          '[firebase_auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted.') {
+        Fluttertoast.showToast(msg: 'User not found');
+      } else if (e.toString() ==
+          '[firebase_auth/wrong-password] The password is invalid or the user does not have a password.') {
+        Fluttertoast.showToast(msg: 'Wrong password');
+      } else {
+        Fluttertoast.showToast(msg: e.toString());
+      }
+    }
   }
 }
