@@ -1,34 +1,49 @@
 // ignore_for_file: deprecated_member_use, camel_case_types, must_be_immutable
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nmims_leave_portal/models/faculty_model.dart';
 import 'package:nmims_leave_portal/models/leave_model.dart';
-import 'package:nmims_leave_portal/store/app_store.dart';
 import 'package:nmims_leave_portal/theme/color_constants.dart';
 import 'package:nmims_leave_portal/view/screens/faculty_section/pending_leaves.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class leaveCardPC extends StatefulWidget {
   final LeaveModel leave;
-  final AppStore appStore;
+
   final FacultyModel currentFaculty;
   const leaveCardPC(
-      {super.key,
-      required this.leave,
-      required this.appStore,
-      required this.currentFaculty});
+      {super.key, required this.leave, required this.currentFaculty});
 
   @override
   State<leaveCardPC> createState() => _leaveCardPCState();
 }
 
 class _leaveCardPCState extends State<leaveCardPC> {
+  final remarkController = TextEditingController();
+
+  Future<void> updateLeaveStatus(LeaveModel leave, String status) async {
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('leaves')
+        .doc(leave.id)
+        .get();
+    if (documentSnapshot.exists) {
+      await FirebaseFirestore.instance
+          .collection('leaves')
+          .doc(leave.id)
+          .update({
+        'status': status,
+        'remark': remarkController.text,
+      });
+    }
+  }
+
   Widget forwardButton() {
     return GestureDetector(
       onTap: () {
-        widget.appStore.updateLeaveStatus(widget.leave, "FORWARDED TO HOD");
+        updateLeaveStatus(widget.leave, "FORWARDED TO HOD");
         Navigator.push(
           context,
           PageRouteBuilder(
@@ -81,7 +96,7 @@ class _leaveCardPCState extends State<leaveCardPC> {
   Widget approveButton() {
     return GestureDetector(
       onTap: () {
-        widget.appStore.updateLeaveStatus(widget.leave, "APPROVED");
+        updateLeaveStatus(widget.leave, "APPROVED");
         Navigator.push(
           context,
           PageRouteBuilder(
@@ -119,7 +134,7 @@ class _leaveCardPCState extends State<leaveCardPC> {
         ),
         child: Center(
           child: Text(
-            'APPROVED',
+            'APPROVE',
             style: GoogleFonts.inter(
               fontSize: 12,
               fontWeight: FontWeight.w500,
@@ -161,25 +176,25 @@ class _leaveCardPCState extends State<leaveCardPC> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.leave.studentName!,
+              'Name: ${widget.leave.studentName}',
               style: GoogleFonts.inter(
-                fontSize: 24,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.black,
               ),
             ),
             Text(
-              widget.leave.studentSapId!,
+              'SAP ID: ${widget.leave.studentSapId}',
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.grey,
               ),
             ),
             Text(
-              widget.leave.studentRollNo!,
+              'Roll No.: ${widget.leave.studentRollNo}',
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.grey,
               ),
@@ -187,7 +202,7 @@ class _leaveCardPCState extends State<leaveCardPC> {
             Text(
               "${widget.leave.studentProgram!} ${widget.leave.studentBranch!}",
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.grey,
               ),
@@ -195,7 +210,7 @@ class _leaveCardPCState extends State<leaveCardPC> {
             Text(
               'Sem: - ${widget.leave.studentSemester!}',
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.grey,
               ),
@@ -203,7 +218,7 @@ class _leaveCardPCState extends State<leaveCardPC> {
             Text(
               'From: - ${widget.leave.dateFrom!}',
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.grey,
               ),
@@ -211,7 +226,7 @@ class _leaveCardPCState extends State<leaveCardPC> {
             Text(
               'To: - ${widget.leave.dateTo!}',
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.grey,
               ),
@@ -219,7 +234,15 @@ class _leaveCardPCState extends State<leaveCardPC> {
             Text(
               'No. of Days: - ${widget.leave.totalDays!}',
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: ColorConstants.grey,
+              ),
+            ),
+            Text(
+              'No. Acad. of Days: - ${widget.leave.totalAcademicDays!}',
+              style: GoogleFonts.inter(
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.grey,
               ),
@@ -227,11 +250,35 @@ class _leaveCardPCState extends State<leaveCardPC> {
             Text(
               'Reason: - ${widget.leave.reason!}',
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.grey,
               ),
             ),
+            (widget.leave.remark != '')
+                ? RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Remark from mentor: - ',
+                          style: GoogleFonts.inter(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: ColorConstants.grey,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '${widget.leave.remark}',
+                          style: GoogleFonts.inter(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: ColorConstants.golden,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
             GestureDetector(
               onTap: () {
                 launch("tel://${widget.leave.parentMobile!}");
@@ -285,6 +332,44 @@ class _leaveCardPCState extends State<leaveCardPC> {
                 color: ColorConstants.black,
               ),
             ),
+            Column(
+              children: [
+                Row(
+                  children: [
+                    Checkbox(
+                      value: widget.leave.isParentCall,
+                      onChanged: null,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    Text(
+                      'Parents Call',
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: ColorConstants.black,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: widget.leave.isParentEmail,
+                      onChanged: null,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    Text(
+                      'Parents Mail',
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: ColorConstants.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
             Container(
               margin: const EdgeInsets.only(
                 top: 10,
@@ -301,7 +386,7 @@ class _leaveCardPCState extends State<leaveCardPC> {
                 ),
               ),
               child: TextField(
-                controller: null,
+                controller: remarkController,
                 maxLines: 3,
                 decoration: InputDecoration(
                   hintText: 'Remarks',

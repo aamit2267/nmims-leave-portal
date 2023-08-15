@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nmims_leave_portal/models/leave_model.dart';
 import 'package:nmims_leave_portal/models/student_model.dart';
-import 'package:nmims_leave_portal/store/app_store.dart';
+import 'package:nmims_leave_portal/models/user_model.dart';
 import 'package:nmims_leave_portal/theme/color_constants.dart';
 import 'package:nmims_leave_portal/view/screens/home_screen/home_screen.dart';
 import 'package:nmims_leave_portal/view/screens/home_screen/widgets/end_drawer.dart';
@@ -32,6 +34,42 @@ final Map<String, TextEditingController> _controllers = {
 };
 int leaveType = 0;
 
+Future<void> applyLeave(LeaveModel leave) async {
+  await FirebaseFirestore.instance.collection('leaves').add({
+    'student_name': leave.studentName,
+    'student_sap_id': leave.studentSapId,
+    'student_roll_no': leave.studentRollNo,
+    'student_program': leave.studentProgram,
+    'student_branch': leave.studentBranch,
+    'student_semester': leave.studentSemester,
+    'student_email': leave.studentEmail,
+    'parent_email': leave.parentEmail,
+    'student_mobile': leave.studentMobile,
+    'parent_mobile': leave.parentMobile,
+    'home_address': leave.homeAddress,
+    'hostel_room_no': leave.hostelRoomNo,
+    'average_attendance': leave.averageAttendance,
+    'date_from': leave.dateFrom,
+    'date_to': leave.dateTo,
+    'total_days': leave.totalDays,
+    'total_academic_days': leave.totalAcademicDays,
+    'reason': leave.reason,
+    'leave_type': leave.leaveType,
+    'status': leave.status,
+    'created_at': leave.createdAt,
+    'isParentCall': false,
+    'isParentMail': false,
+    'remark': '',
+  }).then((value) async {
+    await FirebaseFirestore.instance
+        .collection('students')
+        .doc(leave.studentSapId)
+        .update({
+      'leaves': FieldValue.arrayUnion([value.id])
+    });
+  });
+}
+
 class ApplyLeaveScreen extends StatefulWidget {
   final StudentModel currentStudent;
   const ApplyLeaveScreen({super.key, required this.currentStudent});
@@ -42,11 +80,45 @@ class ApplyLeaveScreen extends StatefulWidget {
 
 class _ApplyLeaveScreenState extends State<ApplyLeaveScreen> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
-  final AppStore appStore = AppStore();
+  UserModel currentUser = UserModel();
+  StudentModel currentStudent = StudentModel();
+  final auth = FirebaseAuth.instance;
+
+  Future<void> getUserData() async {
+    currentUser.uid = auth.currentUser!.uid;
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .get();
+
+    if (documentSnapshot.exists) {
+      currentUser.id = documentSnapshot.get('id');
+      currentUser.role = documentSnapshot.get('role');
+
+      if (currentUser.role == 'student') {
+        await getStudentData(currentUser.id);
+      }
+    }
+  }
+
+  Future<void> getStudentData(sapId) async {
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('students')
+        .doc(sapId)
+        .get();
+
+    if (documentSnapshot.exists) {
+      currentStudent.name = documentSnapshot.get('name');
+      currentStudent.sapId = documentSnapshot.get('sap_id');
+      currentStudent.rollNo = documentSnapshot.get('roll_no');
+      currentStudent.program = documentSnapshot.get('program');
+      currentStudent.branch = documentSnapshot.get('branch');
+    }
+  }
 
   @override
   void initState() {
-    appStore.getUserData();
+    getUserData();
     _controllers['name']!.text = widget.currentStudent.name!;
     _controllers['sap_id']!.text = widget.currentStudent.sapId!;
     _controllers['roll_no']!.text = widget.currentStudent.rollNo!;
@@ -77,10 +149,9 @@ class _ApplyLeaveScreenState extends State<ApplyLeaveScreen> {
         endDrawerEnableOpenDragGesture: false,
         backgroundColor: ColorConstants.white,
         endDrawer: endDrawerStudent(
-          scaffoldKey,
-          'student',
-          widget.currentStudent,
-          context,
+          scaffoldKey: scaffoldKey,
+          currentStudent: widget.currentStudent,
+          role: 'student',
         ),
         body: SafeArea(
           child: Column(
@@ -335,7 +406,7 @@ Widget form(controllers, context, setState) {
                 leave.leaveType = leaveType == 0 ? 'authorized' : 'special';
                 leave.status = 'PENDING';
                 leave.createdAt = DateTime.now().toString();
-                AppStore().applyLeave(leave);
+                applyLeave(leave);
 
                 for (var i = 0; i < _controllers.length; i++) {
                   _controllers.values.elementAt(i).text = '';

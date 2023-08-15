@@ -1,24 +1,20 @@
 // ignore_for_file: deprecated_member_use, camel_case_types, must_be_immutable
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nmims_leave_portal/models/faculty_model.dart';
 import 'package:nmims_leave_portal/models/leave_model.dart';
-import 'package:nmims_leave_portal/store/app_store.dart';
 import 'package:nmims_leave_portal/theme/color_constants.dart';
 import 'package:nmims_leave_portal/view/screens/faculty_section/pending_leaves.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class leaveCard extends StatefulWidget {
   final LeaveModel leave;
-  final AppStore appStore;
   final FacultyModel currentFaculty;
   const leaveCard(
-      {super.key,
-      required this.leave,
-      required this.appStore,
-      required this.currentFaculty});
+      {super.key, required this.leave, required this.currentFaculty});
 
   @override
   State<leaveCard> createState() => _leaveCardState();
@@ -27,6 +23,26 @@ class leaveCard extends StatefulWidget {
 class _leaveCardState extends State<leaveCard> {
   bool phone = false;
   bool mail = false;
+  final remarkController = TextEditingController();
+
+  Future<void> updateLeaveStatus(LeaveModel leave, String status) async {
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('leaves')
+        .doc(leave.id)
+        .get();
+    if (documentSnapshot.exists) {
+      await FirebaseFirestore.instance
+          .collection('leaves')
+          .doc(leave.id)
+          .update({
+        'status': status,
+        'isParentCall': phone,
+        'isParentMail': mail,
+        'remark': remarkController.text,
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -57,25 +73,25 @@ class _leaveCardState extends State<leaveCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.leave.studentName!,
+              'Name: ${widget.leave.studentName}',
               style: GoogleFonts.inter(
-                fontSize: 24,
+                fontSize: 18,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.black,
               ),
             ),
             Text(
-              widget.leave.studentSapId!,
+              'SAP ID: ${widget.leave.studentSapId}',
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.grey,
               ),
             ),
             Text(
-              widget.leave.studentRollNo!,
+              'Roll No.: ${widget.leave.studentRollNo}',
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.grey,
               ),
@@ -83,7 +99,7 @@ class _leaveCardState extends State<leaveCard> {
             Text(
               "${widget.leave.studentProgram!} ${widget.leave.studentBranch!}",
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.grey,
               ),
@@ -91,7 +107,7 @@ class _leaveCardState extends State<leaveCard> {
             Text(
               'Sem: - ${widget.leave.studentSemester!}',
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.grey,
               ),
@@ -99,7 +115,7 @@ class _leaveCardState extends State<leaveCard> {
             Text(
               'From: - ${widget.leave.dateFrom!}',
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.grey,
               ),
@@ -107,7 +123,7 @@ class _leaveCardState extends State<leaveCard> {
             Text(
               'To: - ${widget.leave.dateTo!}',
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.grey,
               ),
@@ -115,7 +131,15 @@ class _leaveCardState extends State<leaveCard> {
             Text(
               'No. of Days: - ${widget.leave.totalDays!}',
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: ColorConstants.grey,
+              ),
+            ),
+            Text(
+              'No. Acad. of Days: - ${widget.leave.totalAcademicDays!}',
+              style: GoogleFonts.inter(
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.grey,
               ),
@@ -123,7 +147,7 @@ class _leaveCardState extends State<leaveCard> {
             Text(
               'Reason: - ${widget.leave.reason!}',
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.grey,
               ),
@@ -243,7 +267,7 @@ class _leaveCardState extends State<leaveCard> {
                 ),
               ),
               child: TextField(
-                controller: null,
+                controller: remarkController,
                 maxLines: 3,
                 decoration: InputDecoration(
                   hintText: 'Remarks',
@@ -261,7 +285,6 @@ class _leaveCardState extends State<leaveCard> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    // show pop up to confirm
                     showDialog(
                       context: context,
                       builder: (context) {
@@ -269,7 +292,7 @@ class _leaveCardState extends State<leaveCard> {
                           title: Text(
                             'Confirm',
                             style: GoogleFonts.inter(
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.w500,
                               color: ColorConstants.black,
                             ),
@@ -298,8 +321,7 @@ class _leaveCardState extends State<leaveCard> {
                             ),
                             TextButton(
                               onPressed: () {
-                                widget.appStore.updateLeaveStatus(
-                                    widget.leave, "REJECTED");
+                                updateLeaveStatus(widget.leave, "REJECTED");
                                 Navigator.push(
                                   context,
                                   PageRouteBuilder(
@@ -367,25 +389,78 @@ class _leaveCardState extends State<leaveCard> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    widget.appStore.updateLeaveStatus(
-                        widget.leave, "FORWARDED TO PROGRAM CHAIR");
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation1, animation2) =>
-                            PendingLeavesPage(
-                                currentFaculty: widget.currentFaculty),
-                        transitionDuration: const Duration(seconds: 0),
-                      ),
-                    );
-                    Fluttertoast.showToast(
-                      msg: 'FORWARDED TO PROGRAM CHAIR',
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: ColorConstants.golden,
-                      textColor: ColorConstants.white,
-                      fontSize: 16.0,
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text(
+                            'Confirm',
+                            style: GoogleFonts.inter(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: ColorConstants.black,
+                            ),
+                          ),
+                          content: Text(
+                            'Are you sure you want to forward this leave to the program chair?',
+                            style: GoogleFonts.inter(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: ColorConstants.black,
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'No',
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorConstants.black,
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                updateLeaveStatus(
+                                    widget.leave, "FORWARDED TO PROGRAM CHAIR");
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder:
+                                        (context, animation1, animation2) =>
+                                            PendingLeavesPage(
+                                                currentFaculty:
+                                                    widget.currentFaculty),
+                                    transitionDuration:
+                                        const Duration(seconds: 0),
+                                  ),
+                                );
+                                Fluttertoast.showToast(
+                                  msg: 'FORWARDED TO PROGRAM CHAIR',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: ColorConstants.golden,
+                                  textColor: ColorConstants.white,
+                                  fontSize: 16.0,
+                                );
+                              },
+                              child: Text(
+                                'Yes',
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorConstants.black,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     );
                   },
                   child: Container(

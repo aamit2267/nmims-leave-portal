@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nmims_leave_portal/models/leave_model.dart';
@@ -41,33 +43,33 @@ class leaveCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            leave.studentName!,
+            'Name: ${leave.studentName}',
             style: GoogleFonts.inter(
-              fontSize: 24,
+              fontSize: 18,
               fontWeight: FontWeight.w500,
               color: ColorConstants.black,
             ),
           ),
           Text(
-            leave.studentSapId!,
+            'SAP ID: ${leave.studentSapId}',
             style: GoogleFonts.inter(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.w500,
               color: ColorConstants.grey,
             ),
           ),
           Text(
-            leave.studentRollNo!,
+            'Roll No.: ${leave.studentRollNo}',
             style: GoogleFonts.inter(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.w500,
               color: ColorConstants.grey,
             ),
           ),
           Text(
-            '${leave.studentProgram!} ${leave.studentBranch!}',
+            "${leave.studentProgram!} ${leave.studentBranch!}",
             style: GoogleFonts.inter(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.w500,
               color: ColorConstants.grey,
             ),
@@ -75,7 +77,7 @@ class leaveCard extends StatelessWidget {
           Text(
             'Sem: - ${leave.studentSemester!}',
             style: GoogleFonts.inter(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.w500,
               color: ColorConstants.grey,
             ),
@@ -83,7 +85,7 @@ class leaveCard extends StatelessWidget {
           Text(
             'From: - ${leave.dateFrom!}',
             style: GoogleFonts.inter(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.w500,
               color: ColorConstants.grey,
             ),
@@ -91,7 +93,7 @@ class leaveCard extends StatelessWidget {
           Text(
             'To: - ${leave.dateTo!}',
             style: GoogleFonts.inter(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.w500,
               color: ColorConstants.grey,
             ),
@@ -99,7 +101,15 @@ class leaveCard extends StatelessWidget {
           Text(
             'No. of Days: - ${leave.totalDays!}',
             style: GoogleFonts.inter(
-              fontSize: 18,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: ColorConstants.grey,
+            ),
+          ),
+          Text(
+            'No. Acad. of Days: - ${leave.totalAcademicDays!}',
+            style: GoogleFonts.inter(
+              fontSize: 16,
               fontWeight: FontWeight.w500,
               color: ColorConstants.grey,
             ),
@@ -107,7 +117,7 @@ class leaveCard extends StatelessWidget {
           Text(
             'Reason: - ${leave.reason!}',
             style: GoogleFonts.inter(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.w500,
               color: ColorConstants.grey,
             ),

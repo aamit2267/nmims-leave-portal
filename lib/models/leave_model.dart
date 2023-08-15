@@ -21,6 +21,8 @@ class LeaveModel {
   String? status;
   String? createdAt;
   String? id;
+  String? remark;
+  bool? isParentCall, isParentEmail;
 
   LeaveModel({
     this.studentName,
@@ -45,5 +47,8 @@ class LeaveModel {
     this.status,
     this.createdAt,
     this.id,
+    this.remark,
+    this.isParentCall,
+    this.isParentEmail,
   });
 }

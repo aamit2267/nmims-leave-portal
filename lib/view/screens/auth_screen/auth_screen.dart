@@ -1,10 +1,11 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nmims_leave_portal/store/app_store.dart';
 import 'package:nmims_leave_portal/theme/color_constants.dart';
+import 'package:nmims_leave_portal/view/screens/home_screen/home_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -17,7 +18,23 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = true;
-  final appStore = AppStore();
+  final auth = FirebaseAuth.instance;
+
+  Future<void> signIn(email, password) async {
+    try {
+      await auth.signInWithEmailAndPassword(email: email, password: password);
+    } on Exception catch (e) {
+      if (e.toString() ==
+          '[firebase_auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted.') {
+        Fluttertoast.showToast(msg: 'User not found');
+      } else if (e.toString() ==
+          '[firebase_auth/wrong-password] The password is invalid or the user does not have a password.') {
+        Fluttertoast.showToast(msg: 'Wrong password');
+      } else {
+        Fluttertoast.showToast(msg: e.toString());
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,10 +193,24 @@ class _AuthScreenState extends State<AuthScreen> {
                               );
                             } else {
                               try {
-                                appStore.signIn(
+                                signIn(
                                   '${_usernameController.text}@nmims.com',
                                   _passwordController.text,
-                                );
+                                ).then((value) => {
+                                      if (auth.currentUser != null)
+                                        {
+                                          Navigator.push(
+                                            context,
+                                            PageRouteBuilder(
+                                              pageBuilder: (context, animation,
+                                                      secondaryAnimation) =>
+                                                  const HomeScreen(),
+                                              transitionDuration:
+                                                  const Duration(seconds: 0),
+                                            ),
+                                          ),
+                                        }
+                                    });
                               } catch (e) {
                                 Fluttertoast.showToast(
                                   msg: 'Invalid Credentials',
