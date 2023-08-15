@@ -57,10 +57,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               } else {
                 return endDrawerFaculty(
-                  scaffoldKey,
-                  appStore.role,
-                  appStore.currentFaculty,
-                  context,
+                  scaffoldKey: scaffoldKey,
+                  role: appStore.role,
+                  currentFaculty: appStore.currentFaculty,
                 );
               }
             } else {

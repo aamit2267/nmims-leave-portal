@@ -151,9 +151,7 @@ abstract class _AppStore with Store {
           id: element.id,
         ));
       }
-    } catch (e) {
-      return;
-    }
+    } catch (e) {}
     try {
       DocumentSnapshot documentSnapshot2 = await FirebaseFirestore.instance
           .collection('programchair')
@@ -191,9 +189,7 @@ abstract class _AppStore with Store {
           id: element.id,
         ));
       }
-    } catch (e) {
-      return;
-    }
+    } catch (e) {}
     try {
       DocumentSnapshot documentSnapshot3 = await FirebaseFirestore.instance
           .collection('HOD')
@@ -231,9 +227,7 @@ abstract class _AppStore with Store {
           id: element.id,
         ));
       }
-    } catch (e) {
-      return;
-    }
+    } catch (e) {}
   }
 
   @action
@@ -342,15 +336,6 @@ abstract class _AppStore with Store {
         id: documentSnapshot.id,
       ));
     } catch (e) {}
-  }
-
-  @action
-  Future<void> signOut() async {
-    try {
-      await auth.signOut();
-    } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-    }
   }
 
   @action

@@ -25,9 +25,6 @@ class leaveCardPC extends StatefulWidget {
 }
 
 class _leaveCardPCState extends State<leaveCardPC> {
-  bool phone = false;
-  bool mail = false;
-
   Widget forwardButton() {
     return GestureDetector(
       onTap: () {
@@ -287,52 +284,6 @@ class _leaveCardPCState extends State<leaveCardPC> {
                 fontWeight: FontWeight.w500,
                 color: ColorConstants.black,
               ),
-            ),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Checkbox(
-                      value: phone,
-                      onChanged: (val) {
-                        setState(() {
-                          phone = val!;
-                        });
-                      },
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    Text(
-                      'Parents Call',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: ColorConstants.black,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Checkbox(
-                      value: mail,
-                      onChanged: (val) {
-                        setState(() {
-                          mail = val!;
-                        });
-                      },
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    Text(
-                      'Parents Mail',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: ColorConstants.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
             ),
             Container(
               margin: const EdgeInsets.only(

@@ -41,10 +41,9 @@ class _PendingLeavesPageState extends State<PendingLeavesPage> {
         backgroundColor: ColorConstants.white,
         endDrawerEnableOpenDragGesture: false,
         endDrawer: endDrawerFaculty(
-          scaffoldKey,
-          'faculty',
-          widget.currentFaculty,
-          context,
+          scaffoldKey: scaffoldKey,
+          role: 'faculty',
+          currentFaculty: widget.currentFaculty,
         ),
         body: SafeArea(
           child: Column(

@@ -41,12 +41,54 @@ mixin _$AppStore on _AppStore, Store {
     return _$getStudentDataAsyncAction.run(() => super.getStudentData(sapId));
   }
 
-  late final _$signOutAsyncAction =
-      AsyncAction('_AppStore.signOut', context: context);
+  late final _$getFacultyDataAsyncAction =
+      AsyncAction('_AppStore.getFacultyData', context: context);
 
   @override
-  Future<void> signOut() {
-    return _$signOutAsyncAction.run(() => super.signOut());
+  Future<void> getFacultyData(dynamic id) {
+    return _$getFacultyDataAsyncAction.run(() => super.getFacultyData(id));
+  }
+
+  late final _$applyLeaveAsyncAction =
+      AsyncAction('_AppStore.applyLeave', context: context);
+
+  @override
+  Future<void> applyLeave(LeaveModel leave) {
+    return _$applyLeaveAsyncAction.run(() => super.applyLeave(leave));
+  }
+
+  late final _$getPendingLeavesAsyncAction =
+      AsyncAction('_AppStore.getPendingLeaves', context: context);
+
+  @override
+  Future<void> getPendingLeaves() {
+    return _$getPendingLeavesAsyncAction.run(() => super.getPendingLeaves());
+  }
+
+  late final _$updateLeaveStatusAsyncAction =
+      AsyncAction('_AppStore.updateLeaveStatus', context: context);
+
+  @override
+  Future<void> updateLeaveStatus(LeaveModel leave, String status) {
+    return _$updateLeaveStatusAsyncAction
+        .run(() => super.updateLeaveStatus(leave, status));
+  }
+
+  late final _$getLeaveHistoryAsyncAction =
+      AsyncAction('_AppStore.getLeaveHistory', context: context);
+
+  @override
+  Future<void> getLeaveHistory() {
+    return _$getLeaveHistoryAsyncAction.run(() => super.getLeaveHistory());
+  }
+
+  late final _$getLastLeaveStatusAsyncAction =
+      AsyncAction('_AppStore.getLastLeaveStatus', context: context);
+
+  @override
+  Future<void> getLastLeaveStatus() {
+    return _$getLastLeaveStatusAsyncAction
+        .run(() => super.getLastLeaveStatus());
   }
 
   late final _$signInAsyncAction =
