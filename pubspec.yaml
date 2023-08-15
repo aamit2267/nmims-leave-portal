@@ -42,8 +42,6 @@ dependencies:
   firebase_core: ^2.15.0
   firebase_auth: ^4.7.2
   cloud_firestore: ^4.8.4
-  mobx: ^2.2.0
-  flutter_mobx: ^2.0.6+5
   url_launcher:
 
 dev_dependencies:
@@ -56,8 +54,6 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-  build_runner: ^2.3.3
-  mobx_codegen: ^2.1.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
