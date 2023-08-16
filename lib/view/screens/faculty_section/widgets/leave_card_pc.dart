@@ -56,7 +56,7 @@ class _leaveCardPCState extends State<leaveCardPC> {
                 ),
               ),
               content: Text(
-                'Are you sure you want to forward this leave to the program chair?',
+                'Are you sure you want to forward this leave to the HOD?',
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
